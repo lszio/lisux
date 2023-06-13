@@ -1,0 +1,38 @@
+#+TITLE: Lisux
+
+My guix channel
+
+* Usage
+
+** via load-path
+
+The simplest way to use this channel is to temporarily add it to Guix's
+load-path:
+
+#+BEGIN_SRC shell
+git clone https://github.com/liszt21/lisux.git
+guix install -L ./Lisux ***
+#+END_SRC
+
+** via channels.scm
+
+A more permanent solution is to configure Guix to use this channel as an
+_additional channel_. This will extend your package collection with
+definitions from this channel. Updates will be received (and authenticated)
+with `guix pull`.
+
+To use the channel, add it to your configuration in
+`~/.config/guix/channels.scm`:
+
+#+BEGIN_SRC scheme
+(cons* (channel
+        (name 'lisux)
+        (url "https://github.com/liszt21/lisux.git")
+        (introduction
+         (make-channel-introduction
+          "d4ad130614963334f3f94a8b5f6ad7d1ba4eac3e"
+          (openpgp-fingerprint
+           "ABFC 5483 F3F7 1C39 922E  2E42 0EEA FA02 DA3C 7513"))))
+       %default-channels)
+#+END_SRC
+
