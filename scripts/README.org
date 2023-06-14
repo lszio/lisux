@@ -1,0 +1,10 @@
+#+TITLE: scripts
+
+* mirror-helper
+#+BEGIN_SRC shell
+bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/mirror-helper.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/mirror-helper.sh)
+
+# linuxmirrors
+bash <(curl -sSL https://linuxmirrors.cn/main.sh)
+#+END_SRC
