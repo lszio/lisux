@@ -10,19 +10,12 @@ packages["yum"]="wget curl git gcc autoconf libtool make automake libcurl-devel 
 packages["guix"]=""
 packages["pacman"]=${packages["yay"]}
 
-declare -A mirrors
-mirrors["base"]=${BASE_MIRROR:=https://mirror.sjtu.edu.cn}
-mirrors["gnu"]=${GNU_MIRROR:=$BASE_MIRROR/gnu}
-mirrors["arch"]=${ARCH_MIRROR:=$BASE_MIRROR/archlinux}
-mirrors["ubuntu"]=${UBUNTU_MIRROR:=$BASE_MIRROR/ubuntu}
-mirrors["manjaro"]=${MANJARO_MIRROR:=$BASE_MIRROR/manjaro}
-mirrors["guix"]=${GUIX_MIRROR:=https://mirror.sjtu.edu.cn/guix}
-
 [ `whoami` != "root" ] && SUDO="sudo"
 
 echo "Variables:"
-echo "  USE_MIRROR = ${USE_MIRROR:=true}"
-echo "  NEED_GUIX = ${NEED_GUIX:=true}"
+echo "  USE_MIRROR = ${USE_MIRROR:=false}"
+echo "  NEED_GUIX = ${NEED_GUIX:=false}"
+echo "  BASIC= ${BASIC:=false}"
 
 function command-exists() {
     command -v "$@" >/dev/null 2>&1
@@ -39,19 +32,11 @@ function text-in-file() {
     }
 }
 
-function setup-mirrors() {
-    echo "$PACKAGE_MANAGER"
-    text-in-file "ubuntu" /etc/apt/sources.list && {
-        $SUDO cp /etc/apt/sources.list /etc/apt/sources.list.lisux.bak
-        $SUDO sed -Ei "s@http(s)?://.*/ubuntu@${mirrors['ubuntu']}@g" /etc/apt/sources.list
-    }
-}
-
 function install-guix() {
     cd /tmp
-    wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh --yes
+    wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh 
     chmod +x guix-install.sh
-    ./guix-install.sh
+    ./guix-install.sh --yes
 }
 
 function install-basic() {
@@ -78,6 +63,6 @@ command-exists dnf && PACKAGE_MANAGER="dnf"
 command-exists yay && PACKAGE_MANAGER="yay"
 
 
-[ $USE_MIRROR ] && setup-mirrors
+[ $USE_MIRROR ] && bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/mirror-helper.sh)
 install-basic
 [ $NEED_GUIX ] && ! command-exists guix && install-guix
