@@ -33,10 +33,11 @@ function text-in-file() {
 }
 
 function install-guix() {
-    cd /tmp
-    wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh 
-    chmod +x guix-install.sh
-    ./guix-install.sh --yes
+    apt install guix || bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/install-guix.sh)
+    # cd /tmp
+    # wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh 
+    # chmod +x guix-install.sh
+    # ./guix-install.sh
 }
 
 function install-basic() {
@@ -44,9 +45,9 @@ function install-basic() {
 
     case $PACKAGE_MANAGER in
         "yay")
-            yay -S ${packages["yay"]} --needed --noconfirm;;
+            yay -Syy && yay -S ${packages["yay"]} --needed --noconfirm;;
         "pacman")
-            $SUDO pacman -S ${packages["pacman"]} --needed --noconfirm;;
+            $SUDO pacman -Syy && $SUDO pacman -S ${packages["pacman"]} --needed --noconfirm;;
         "apt")
             $SUDO apt update && $SUDO apt install ${packages["apt"]} -y;;
         "yum")

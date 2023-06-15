@@ -8,3 +8,9 @@ bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/
 # linuxmirrors
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 #+END_SRC
+
+* install-guix
+#+BEGIN_SRC shell
+bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/install-guix.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/install-guix.sh)
+#+END_SRC
