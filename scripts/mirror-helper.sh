@@ -2,8 +2,32 @@
 
 set -e
 
+## 软件源列表
+# 国内格式："软件源名称@软件源地址"
+MIRROR_LIST=(
+    "阿里云@mirrors.aliyun.com"
+    "腾讯云@mirrors.tencent.com"
+    "华为云@repo.huaweicloud.com"
+    "网易@mirrors.163.com"
+    "搜狐@mirrors.sohu.com"
+    "清华大学@mirrors.tuna.tsinghua.edu.cn"
+    "北京大学@mirrors.pku.edu.cn"
+    "浙江大学@mirrors.zju.edu.cn"
+    "南京大学@mirrors.nju.edu.cn"
+    "重庆大学@mirrors.cqu.edu.cn"
+    "兰州大学@mirror.lzu.edu.cn"
+    "上海交通大学@mirror.sjtu.edu.cn"
+    "哈尔滨工业大学@mirrors.hit.edu.cn"
+    "中国科学技术大学@mirrors.ustc.edu.cn"
+    "中国科学院软件研究所@mirror.iscas.ac.cn"
+)
+USE_HTTPS=${USE_HTTPS:-true}
+MIRROR_INDEX=${PICK_MIRROR:-1}
+MIRROR_PICKED="$(eval echo \${MIRROR_LIST[$(($MIRROR_INDEX - 1))]} | awk -F '@' '{print$2}')"
+MIRROR_PROTOCOL=${WEB_PROTOCOL:-https}
+
 declare -A mirrors
-mirrors["base"]=${BASE_MIRROR:=http://mirror.sjtu.edu.cn}
+mirrors["base"]=${BASE_MIRROR:="$MIRROR_PROTOCOL://$MIRROR_PICKED"}
 mirrors["gnu"]=${GNU_MIRROR:=$BASE_MIRROR/gnu}
 mirrors["arch"]=${ARCH_MIRROR:=$BASE_MIRROR/archlinux}
 mirrors["ubuntu"]=${UBUNTU_MIRROR:=$BASE_MIRROR/ubuntu}
@@ -28,7 +52,6 @@ function text-in-file() {
 }
 
 function setup-mirrors() {
-    echo "$PACKAGE_MANAGER"
     text-in-file "ubuntu" /etc/apt/sources.list && {
         echo "Setup ubuntu sources to ${mirrors['ubuntu']}"
         [ ! -f /etc/sources.list.lisux.bak ] && $SUDO cp /etc/apt/sources.list /etc/apt/sources.list.lisux.bak
