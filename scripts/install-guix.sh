@@ -8,6 +8,7 @@ echo "  GUIX_VERSION = ${GUIX_VERSION:=1.4.0}"
 echo "  GNU_MIRROR = ${GNU_MIRROR:=https://mirror.sjtu.edu.cn/gnu/guix}"
 echo "  ARCH_TYPE = ${ARCH_TYPE:=`uname -i`}"
 echo "  GUIX_FILE = ${GUIX_FILE:=guix-binary-${GUIX_VERSION}.${ARCH_TYPE}-linux.tar.xz}"
+echo "  UPDATE_GUIX = ${UPDATE_GUIX:=true}
 
 cd /tmp
 [ ! -f ${GUIX_FILE} ] && wget ${GNU_MIRROR}/${GUIX_FILE}
@@ -53,8 +54,10 @@ guix archive --authorize < ~root/.config/guix/current/share/guix/ci.guix.info.pu
 GUIX_PROFILE="`echo ~root`/.config/guix/current"
 source $GUIX_PROFILE/etc/profile
 
-guix-daemon --build-users-group=guixbuild --disable-chroot  --substitute-urls="https://mirror.sjtu.edu.cn/guix/ https://ci.guix.gnu.org" &
-guix pull
-guix package -u
-guix gc
-guix gc --optimize
+if [ ${UPDATE_GUIX} ] && {
+  guix-daemon --build-users-group=guixbuild --disable-chroot  --substitute-urls="https://mirror.sjtu.edu.cn/guix/ https://ci.guix.gnu.org" &
+  guix pull
+  guix package -u
+  guix gc
+  guix gc --optimize
+}
