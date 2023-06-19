@@ -8,7 +8,7 @@ echo "  GUIX_VERSION = ${GUIX_VERSION:=1.4.0}"
 echo "  GNU_MIRROR = ${GNU_MIRROR:=https://mirror.sjtu.edu.cn/gnu/guix}"
 echo "  ARCH_TYPE = ${ARCH_TYPE:=`uname -i`}"
 echo "  GUIX_FILE = ${GUIX_FILE:=guix-binary-${GUIX_VERSION}.${ARCH_TYPE}-linux.tar.xz}"
-echo "  UPDATE_GUIX = ${UPDATE_GUIX:=true}
+echo "  UPDATE_GUIX = ${UPDATE_GUIX:=true}"
 
 cd /tmp
 [ ! -f ${GUIX_FILE} ] && wget ${GNU_MIRROR}/${GUIX_FILE}
