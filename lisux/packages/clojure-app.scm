@@ -1,4 +1,4 @@
-(define-module (lisux packages clojure-xyz)
+(define-module (lisux packages clojure-app)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages)
   #:use-module (guix download)
@@ -11,23 +11,17 @@
 (define-public babashka
   (package
     (name "babashka")
-    (version "0.8.0")
+    (version "1.3.180")
     (source
      (origin
        (method url-fetch)
-       (uri
-        (string-append
-         "https://github.com/babashka/babashka/releases/download/v"
-         version "/babashka-" version "-linux-amd64.tar.gz"))
-       (sha256
-        (base32 "1g69xx80sixp8ysfbcyivrjsr47m6brgr4l2i6h32rjp3caa6730"))))
+       (uri (string-append "https://github.com/babashka/babashka/releases/download/v" version "/babashka-" version "-linux-amd64.tar.gz"))
+       (sha256 (base32 "1zzhzyq8pqivp9bnfhyzr8xkz4h6f8p4q5wbyfb3d4g7zkbsqzc4"))))
     (build-system binary-build-system)
     (supported-systems '("x86_64-linux" "i686-linux"))
     (arguments
-     `(#:patchelf-plan
-       `(("bb" ("libc" "zlib" "libstdc++")))
-       #:install-plan
-       `(("." ("bb") "bin/"))
+     `(#:patchelf-plan `(("bb" ("libc" "zlib" "libstdc++")))
+       #:install-plan `(("." ("bb") "bin/"))
        #:phases
        (modify-phases
            %standard-phases
@@ -41,10 +35,8 @@
     (inputs
      `(("libstdc++" ,(make-libstdc++ gcc))
        ("zlib" ,zlib)))
-    (synopsis
-     "Fast native Clojure scripting runtime")
-    (description
-     "Babashka is a native Clojure interpreter for scripting with fast startup.
+    (synopsis "Fast native Clojure scripting runtime")
+    (description "Babashka is a native Clojure interpreter for scripting with fast startup.
 Its main goal is to leverage Clojure in places where you would be using bash otherwise.")
     (home-page "https://babashka.org/")
     (license license:epl1.0)))
