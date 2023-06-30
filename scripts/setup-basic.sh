@@ -12,11 +12,6 @@ packages["pacman"]=${packages["yay"]}
 
 [ `whoami` != "root" ] && SUDO="sudo"
 
-echo "Variables:"
-echo "  USE_MIRROR = ${USE_MIRROR:=false}"
-echo "  NEED_GUIX = ${NEED_GUIX:=false}"
-echo "  BASIC= ${BASIC:=false}"
-
 function command-exists() {
     command -v "$@" >/dev/null 2>&1
 }
@@ -30,14 +25,6 @@ function text-in-file() {
         }
         grep "$1" < "$2" >/dev/null 2>&1
     }
-}
-
-function install-guix() {
-    apt install guix || bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/install-guix.sh)
-    # cd /tmp
-    # wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh 
-    # chmod +x guix-install.sh
-    # ./guix-install.sh
 }
 
 function install-basic() {
@@ -63,7 +50,4 @@ command-exists yum && PACKAGE_MANAGER="yum"
 command-exists dnf && PACKAGE_MANAGER="dnf"
 command-exists yay && PACKAGE_MANAGER="yay"
 
-
-[ $USE_MIRROR ] && bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/mirror-helper.sh)
 install-basic
-[ $NEED_GUIX ] && ! command-exists guix && install-guix
