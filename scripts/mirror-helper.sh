@@ -21,13 +21,13 @@ MIRROR_LIST=(
     "中国科学技术大学@mirrors.ustc.edu.cn"
     "中国科学院软件研究所@mirror.iscas.ac.cn"
 )
-USE_HTTPS=${USE_HTTPS:-true}
-MIRROR_INDEX=${PICK_MIRROR:-1}
+MIRROR_TYPE=${MIRROR_TYPE:-http}
+MIRROR_INDEX=${MIRROR_INDEX:-1}
+
 MIRROR_PICKED="$(eval echo \${MIRROR_LIST[$(($MIRROR_INDEX - 1))]} | awk -F '@' '{print$2}')"
-MIRROR_PROTOCOL=${WEB_PROTOCOL:-https}
 
 declare -A mirrors
-mirrors["base"]=${BASE_MIRROR:="$MIRROR_PROTOCOL://$MIRROR_PICKED"}
+mirrors["base"]=${BASE_MIRROR:="$MIRROR_TYPE://$MIRROR_PICKED"}
 mirrors["gnu"]=${GNU_MIRROR:=$BASE_MIRROR/gnu}
 mirrors["arch"]=${ARCH_MIRROR:=$BASE_MIRROR/archlinux}
 mirrors["ubuntu"]=${UBUNTU_MIRROR:=$BASE_MIRROR/ubuntu}
