@@ -2,6 +2,8 @@
 
 * mirror-helper
 #+BEGIN_SRC shell
+MIRROR_INDEX=1 && MIRROR_TYPE=https
+
 bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/mirror-helper.sh)
 bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/mirror-helper.sh)
 
@@ -9,8 +11,14 @@ bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 #+END_SRC
 
-* install-guix
+* setup-basic
 #+BEGIN_SRC shell
-bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/install-guix.sh)
-bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/install-guix.sh)
+bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/setup-basic.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/setup-basic.sh)
+#+END_SRC
+
+* setup-guix
+#+BEGIN_SRC shell
+bash <(curl -sSL https://gitee.com/liszt21/lisux/raw/master/scripts/setup-guix.sh)
+bash <(curl -sSL https://raw.githubusercontent.com/liszt21/lisux/master/scripts/setup-guix.sh)
 #+END_SRC
