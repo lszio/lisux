@@ -42,12 +42,34 @@ function install-basic() {
         "dnf")
             $SUDO yum install ${packages["yum"]} -y;;
     esac
+
+    install-roswell
+
+    echo "Installation Finished"
 }
 
-command-exists pacman && PACKAGE_MANAGER="pacman"
+command-exists yay && PACKAGE_MANAGER="yay"
 command-exists apt && PACKAGE_MANAGER="apt"
 command-exists yum && PACKAGE_MANAGER="yum"
 command-exists dnf && PACKAGE_MANAGER="dnf"
-command-exists yay && PACKAGE_MANAGER="yay"
+command-exists pacman && PACKAGE_MANAGER="pacman"
+
+function install-roswell() {
+    if [ command-exists ros ];then
+    	echo "ros already install" 
+    elif [ $PACKAGE_MANAGER -eq "yay" ];then 
+        yay -S roswell -y
+    elif [ $PACKAGE_MANAGER -eq "pacman" ];then 
+        $sudo pacman -S roswell -y
+    else 
+        cd /tmp
+        git clone -b release https://github.com/roswell/roswell.git
+        cd roswell
+        sh bootstrap
+        ./configure
+        make
+        $sudo make install
+    fi
+}
 
 install-basic
