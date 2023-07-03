@@ -1,0 +1,20 @@
+#+TITLE: Docker Files 
+
+* Build
+#+BEGIN_SRC shell
+cd ../ # in parent directory
+docker build . -f docker/ubuntu-dev/Dockerfile -t ubuntu-dev
+#+END_SRC
+
+* Mirrors
+#+BEGIN_SRC shell
+sudo sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+sudo sed -i 's/cn.archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+sudo sed -i 's/security.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+#+END_SRC
+
+[[https://www.gnu.org/prep/ftp.html][GNU Mirrors]]
+
+TODO
+
+https://github.com/freakhill/dockerfiles/blob/master/guixbuilder/Dockerfile
