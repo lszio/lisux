@@ -3,15 +3,6 @@
 set -e
 # set -v
 
-declare -A packages
-packages["yay"]="wget base-devel git"
-packages["apt"]="wget curl git gcc build-essential libcurl4-openssl-dev automake zlib1g-dev"
-packages["yum"]="wget curl git gcc autoconf libtool make automake libcurl-devel zlib-devel"
-packages["guix"]=""
-packages["pacman"]=${packages["yay"]}
-
-[ `whoami` != "root" ] && SUDO="sudo"
-
 function command-exists() {
     command -v "$@" >/dev/null 2>&1
 }
@@ -27,10 +18,37 @@ function text-in-file() {
     }
 }
 
+declare -A packages
+packages["yay"]="wget base-devel git"
+packages["apt"]="wget curl git gcc build-essential libcurl4-openssl-dev automake zlib1g-dev"
+packages["yum"]="wget curl git gcc autoconf libtool make automake libcurl-devel zlib-devel"
+packages["dnf"]=${packages["dnf"]}
+packages["guix"]="" # TODO
+packages["pacman"]=${packages["yay"]}
+packages["nix-env"]="" # TODO
+
+[ `whoami` != "root" ] && SUDO="sudo"
+
+if command-exists "yay"; then
+    PM="yay"
+elif command-exists "pacman";then
+    PM="pacman"
+elif command-exists "dnf";then
+    PM="dnf"
+elif command-exists "yum";then
+    PM="yum"
+elif command-exists "apt";then
+    PM="apt"
+elif command-exists "nix-env";then
+    PM="nix-env"
+elif command-exists "guix";then
+    PM="guix"
+fi
+
 function install-basic() {
     echo "install basic"
 
-    case $PACKAGE_MANAGER in
+    case $PM in
         "yay")
             yay -Syy && yay -S ${packages["yay"]} --needed --noconfirm;;
         "pacman")
@@ -40,35 +58,43 @@ function install-basic() {
         "yum")
             $SUDO yum install ${packages["yum"]} -y;;
         "dnf")
-            $SUDO yum install ${packages["yum"]} -y;;
+            $SUDO dnf install ${packages["dnf"]} -y;;
     esac
 
     install-roswell
 
     echo "Installation Finished"
 }
-
-command-exists yay && PACKAGE_MANAGER="yay"
-command-exists apt && PACKAGE_MANAGER="apt"
-command-exists yum && PACKAGE_MANAGER="yum"
-command-exists dnf && PACKAGE_MANAGER="dnf"
-command-exists pacman && PACKAGE_MANAGER="pacman"
-
 function install-roswell() {
-    if [ command-exists ros ];then
+    if command-exists "ros";then
     	echo "ros already install" 
-    elif [ $PACKAGE_MANAGER -eq "yay" ];then 
+    elif [ "$PM" == "yay" ];then 
         yay -S roswell -y
-    elif [ $PACKAGE_MANAGER -eq "pacman" ];then 
+    elif [ "$PM" == "pacman" ];then 
         $sudo pacman -S roswell -y
     else 
-        cd /tmp
-        git clone -b release https://github.com/roswell/roswell.git
-        cd roswell
+        get-roswell-source
+        cd /tmp/roswell
         sh bootstrap
         ./configure
         make
-        $sudo make install
+        $SUDO make install
+        cd $OLDPWD
+        rm -rf /tmp/roswell
+    fi
+
+    if [ $SUDO];then
+        ros setup
+        ros install liszt21/aliya
+    fi
+}
+
+function get-roswell-source() {
+    echo "Clone roswell from gitee"
+    git clone -b release https://gitee.com/mirrors/Roswell.git /tmp/roswell
+
+    if [ $? -ne 0 ];then
+        git clone -b release https://github.com/roswell/roswell.git /tmp/roswell
     fi
 }
 
